@@ -67,6 +67,8 @@ const GCS_NAV: NavSection[] = [
       { label: 'Clients et contacts', href: '/contacts', icon: icons.contact },
       { label: 'Pipeline commercial', href: '/pipeline', icon: icons.pipeline },
       { label: 'Cotations', href: '/cotations', icon: icons.quote },
+      { label: 'Demandes reçues', href: '/demandes', icon: icons.inbox },
+      { label: 'Formulaires', href: '/formulaires', icon: icons.control },
     ],
   },
   {
@@ -109,13 +111,41 @@ const GCS_NAV: NavSection[] = [
   },
 ];
 
-const PREVIEW_NAV = (org: 'KIMEXDI' | 'DRELALI'): NavSection[] => [
+const KIMEXDI_NAV: NavSection[] = [
   {
     title: 'Pilotage',
     items: [{ label: 'Tableau de bord', href: '/tableau-de-bord', icon: icons.dashboard }],
   },
   {
-    title: org === 'KIMEXDI' ? 'Logistique internationale' : 'Agro-alimentaire',
+    title: 'Plateforme publique',
+    items: [
+      { label: 'Formulaires', href: '/formulaires', icon: icons.control },
+      { label: 'Demandes reçues', href: '/demandes', icon: icons.inbox },
+      { label: 'Site public', href: '/kimexdi', icon: icons.globe },
+    ],
+  },
+  {
+    title: 'Logistique internationale',
+    items: [
+      { label: 'Modules à venir', href: '/tableau-de-bord', icon: icons.globe, comingSoon: true },
+    ],
+  },
+  {
+    title: 'Administration',
+    items: [
+      { label: 'Organisation', href: '/organisation', icon: icons.org },
+      { label: 'Paramètres', href: '/parametres', icon: icons.settings },
+    ],
+  },
+];
+
+const DRELALI_NAV: NavSection[] = [
+  {
+    title: 'Pilotage',
+    items: [{ label: 'Tableau de bord', href: '/tableau-de-bord', icon: icons.dashboard }],
+  },
+  {
+    title: 'Agro-alimentaire',
     items: [
       { label: 'Modules à venir', href: '/tableau-de-bord', icon: icons.globe, comingSoon: true },
     ],
@@ -130,7 +160,9 @@ const PREVIEW_NAV = (org: 'KIMEXDI' | 'DRELALI'): NavSection[] => [
 ];
 
 export function navForOrg(org: OrgCode): NavSection[] {
-  return org === 'GCS' ? GCS_NAV : PREVIEW_NAV(org);
+  if (org === 'GCS') return GCS_NAV;
+  if (org === 'KIMEXDI') return KIMEXDI_NAV;
+  return DRELALI_NAV;
 }
 
 export const PAGE_TITLES: Record<string, string> = {
@@ -142,6 +174,8 @@ export const PAGE_TITLES: Record<string, string> = {
   '/contacts': 'Clients et contacts',
   '/pipeline': 'Pipeline commercial',
   '/cotations': 'Cotations',
+  '/formulaires': 'Gestion des formulaires',
+  '/demandes': 'Demandes reçues',
   '/missions': 'Missions',
   '/planning': 'Planning',
   '/ressources': 'Ressources et véhicules',

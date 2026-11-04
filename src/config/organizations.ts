@@ -41,7 +41,7 @@ export const ORGANIZATIONS: Record<OrgCode, OrganizationConfig> = {
     country: 'Canada',
     currency: 'CAD',
     timezone: 'America/Toronto',
-    accentColor: '#b91c1c',
+    accentColor: '#1769aa',
     modules: ['pilotage'],
     demo: true,
     description:

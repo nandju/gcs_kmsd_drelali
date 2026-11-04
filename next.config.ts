@@ -1,9 +1,24 @@
 import type { NextConfig } from "next";
 
+// NEXT_PUBLIC_PLATFORM = gcs | kimexdi | (absent = hub multi-plateformes).
+// Lue au moment du build (next.config + middleware) : pour servir une seule
+// plateforme, construire avec NEXT_PUBLIC_PLATFORM=kimexdi ou =gcs.
+const platform = process.env.NEXT_PUBLIC_PLATFORM ?? "all";
+const home =
+  platform === "kimexdi"
+    ? "/kimexdi"
+    : platform === "gcs"
+      ? "/gcs"
+      : "/tableau-de-bord";
+
 const nextConfig: NextConfig = {
-  // La plateforme opérationnelle s'ouvre sur le tableau de bord.
   async redirects() {
-    return [{ source: '/', destination: '/tableau-de-bord', permanent: false }];
+    return [
+      { source: "/", destination: home, permanent: false },
+      // Anciennes routes publiques GCS → nouveau site /gcs.
+      { source: "/demande", destination: "/gcs/devis", permanent: false },
+      { source: "/demande/:slug", destination: "/gcs/demande/:slug", permanent: false },
+    ];
   },
   images: {
     remotePatterns: [

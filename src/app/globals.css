@@ -384,3 +384,33 @@
 .floating-4 {
   animation: float-rev 6s ease-in-out infinite;
 }
+
+/* Palette KIMEXDI — identité institutionnelle bleue et grise. */
+:root {
+  --kimexdi-navy: #102d46;
+  --kimexdi-blue: #1769aa;
+  --kimexdi-blue-light: #e8f1f8;
+  --kimexdi-slate: #536779;
+  --kimexdi-gray: #718096;
+  --kimexdi-surface: #f4f6f8;
+  --kimexdi-white: #ffffff;
+  --kimexdi-border: #dfe5eb;
+  --kimexdi-ink: #172b3a;
+}
+
+/* Palette GCS — reprise du site vitrine (orange accent + navy). */
+:root {
+  --gcs-accent: #e8552d;
+  --gcs-accent-dark: #c9451f;
+  --gcs-accent-soft: #f6a88f;
+  --gcs-accent-light: #fdeee8;
+  --gcs-navy-950: #0a1e30;
+  --gcs-navy-900: #12314e;
+  --gcs-navy-800: #1a3f60;
+  --gcs-navy-700: #24507a;
+  --gcs-primary: #0b5fa5;
+  --gcs-surface: #f5f7fa;
+  --gcs-ink: #14263a;
+  --gcs-ink-soft: #5c6f80;
+  --gcs-line: #e3e9f0;
+}

@@ -287,8 +287,11 @@ function ProfileMenu() {
           <Link href="/chauffeur" className="block px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50" onClick={close}>
             Vue chauffeur (mobile)
           </Link>
-          <Link href="/demande" className="block px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50" onClick={close}>
-            Formulaire public GCS
+          <Link href="/gcs" className="block px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50" onClick={close}>
+            Site public GCS
+          </Link>
+          <Link href="/kimexdi" className="block px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50" onClick={close}>
+            Site public KIMEXDI
           </Link>
         </div>
       )}

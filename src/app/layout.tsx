@@ -4,6 +4,7 @@ import { Onest } from 'next/font/google';
 import './globals.css';
 import { ToasterProvider } from './providers/toaster';
 import { ErpProvider } from '@/context/erp-store';
+import { FormsProvider } from '@/context/forms-store';
 
 const onest = Onest({
   subsets: ['latin'],
@@ -34,7 +35,9 @@ export default function RootLayout({
           <ToasterProvider />
 
           <ErpProvider>
-            <div className="isolate flex flex-col flex-1">{children}</div>
+            <FormsProvider>
+              <div className="isolate flex flex-col flex-1">{children}</div>
+            </FormsProvider>
           </ErpProvider>
         </ThemeProvider>
       </body>
