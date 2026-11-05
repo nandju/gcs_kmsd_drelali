@@ -1,0 +1,16 @@
+-- ============================================================================
+-- supabase/seed.sql — données de DÉMONSTRATION LOCALES uniquement
+--
+-- Ce fichier n'est exécuté que par `supabase db reset` / `supabase start`
+-- en local. `supabase db push` (projet distant) NE le lit PAS.
+--
+-- Les données initiales de production (organisations GCS / KIMEXDI,
+-- permissions, rôles, attributions) sont déjà insérées de façon
+-- idempotente dans :
+--   supabase/migrations/20261105000100_socle_multi_organisations.sql
+-- Elles sont donc présentes après `db push` comme après `db reset`.
+--
+-- Ce fichier reste volontairement vide de seed pour éviter les doublons
+-- et les divergences entre local et distant. Il accueillera plus tard
+-- d'éventuelles données de démonstration strictement locales.
+-- ============================================================================

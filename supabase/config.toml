@@ -1,0 +1,28 @@
+# ============================================================================
+# Supabase CLI — configuration du projet
+# Projet distant : ai-saas-starter-kit (multi-organisations GCS / KIMEXDI)
+#
+# IMPORTANT : ne jamais commiter de clé secrète ici. Ce fichier ne contient
+# que des réglages non sensibles.
+# ============================================================================
+
+project_id = "vvnpjjhudjoupydvqjsj"
+
+[api]
+enabled = true
+port = 54321
+# Schémas exposés par l'API PostgREST.
+# Le schéma `private` (fonctions RLS) n'y figure VOLONTAIREMENT PAS :
+# il reste inaccessible depuis l'API.
+#
+# VÉRIFICATION DISTANTE OBLIGATOIRE (une fois, après `supabase link`) :
+# Dashboard → Project Settings → Data API → « Exposed schemas » doit
+# contenir exactement : public, storage, graphql_public.
+# Si `private` y apparaît, le retirer immédiatement.
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+# Inscription publique : à gérer dans le dashboard Supabase
+# (Authentication → Sign In / Sign Up → désactiver « Allow new users
+# to sign up »). Invitations uniquement — voir supabase/README.md.

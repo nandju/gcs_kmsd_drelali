@@ -90,6 +90,12 @@ côté serveur lors de l'intégration Supabase/auth).
   compléter » — ne pas inventer de coordonnées, tarifs ou capacités).
 - Aucune messagerie interne : les demandes publiques sont gérées comme des
   soumissions structurées dans `/demandes`.
+- Supabase (phase 0 — connexion technique seulement) : clients dans
+  `src/lib/supabase/` (`client.ts` navigateur singleton, `server.ts` par
+  requête via cookies, `env.ts` validation). Variables :
+  `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+  (.env.local). Aucune table, aucune requête métier, auth non branchée ;
+  next-auth est installé mais jamais importé (pas de conflit).
 - Références métier : LEAD-2026-XXXX, COT-XXXXX, MT-XXXXX, FAC-XXXXXX, PAY-XXXXXX,
   INC-XXXXXX, DEP-XXXXXX.
 - Le template d'origine n'a pas de shadcn/ui — ne pas l'ajouter ; utiliser les
