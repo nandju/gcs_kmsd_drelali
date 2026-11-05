@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { KIMEXDI } from '@/config/kimexdi';
 import { CtaButton, Eyebrow, Lead, Section } from '@/components/kimexdi/ui';
@@ -79,8 +80,18 @@ export default function ServicesPage() {
             return (
               <article
                 key={s.id}
-                className="flex flex-col rounded-xl border border-[var(--kimexdi-border)] bg-white p-6"
+                className="flex flex-col overflow-hidden rounded-xl border border-[var(--kimexdi-border)] bg-white"
               >
+                <div className="relative aspect-[16/8] overflow-hidden">
+                  <Image
+                    src={s.image}
+                    alt={s.alt}
+                    fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-6">
                 <h2 className="text-lg font-semibold text-[var(--kimexdi-navy)]">
                   {s.title}
                 </h2>
@@ -95,13 +106,14 @@ export default function ServicesPage() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-5 pt-4">
+                <div className="mt-auto pt-5">
                   <Link
                     href="/kimexdi/devis"
                     className="text-sm font-semibold text-[var(--kimexdi-blue)] hover:underline"
                   >
                     {d?.cta ?? 'Demander un devis'} →
                   </Link>
+                </div>
                 </div>
               </article>
             );

@@ -29,7 +29,13 @@ npm run build # build de production
   formulaire publié DEVIS, `/gcs/demande/[slug]` = tout formulaire publié.
   Les anciennes routes `/demande*` redirigent vers `/gcs/*` (next.config).
 - `src/app/kimexdi/` — site public KIMEXDI (accueil, services, fonctionnement,
-  à propos, contact, `/kimexdi/devis`, `/kimexdi/demande/[slug]`).
+  à propos, contact, `/kimexdi/devis`, `/kimexdi/demande/[slug]`). Visuels :
+  photothèque logistique partagée avec GCS, copiée dans
+  `public/images/kimexdi/` et mappée dans `src/config/kimexdi.ts`.
+- Tableau de bord KIMEXDI : `src/app/(erp)/tableau-de-bord/kimexdi-dashboard.tsx`
+  (KPI demandes/formulaires, dernières demandes, donut par statut, activité
+  audit, accès rapides au site public, modules futurs) — rendu quand
+  l'org active est KIMEXDI.
 - `src/app/(site)/` — pages du template d'origine conservées (/pricing, /signin…).
 
 ## Déploiement par plateforme (NEXT_PUBLIC_PLATFORM)

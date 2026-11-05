@@ -15,6 +15,7 @@ import { formatDateTime, formatMoney } from '@/lib/erp/format';
 import { MISSION_STATUS, type Tone } from '@/lib/erp/labels';
 import { Badge, Card, ComingSoon, DemoNotice, LinkButton, PageHeader } from '@/components/erp/ui';
 import { BarChart, DonutChart, LineChart } from '@/components/erp/charts';
+import { KimexdiDashboard } from './kimexdi-dashboard';
 
 function isToday(iso: string) {
   const a = new Date(iso);
@@ -106,6 +107,10 @@ export default function DashboardPage() {
       submittedCosts,
     };
   }, [s]);
+
+  if (s.org === 'KIMEXDI') {
+    return <KimexdiDashboard />;
+  }
 
   if (s.org !== 'GCS') {
     return (

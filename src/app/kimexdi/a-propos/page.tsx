@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { KIMEXDI } from '@/config/kimexdi';
 import { Eyebrow, Lead, Section, SectionTitle } from '@/components/kimexdi/ui';
 
@@ -21,7 +22,16 @@ export default function AboutPage() {
       </section>
 
       <Section>
-        <div className="grid gap-10 lg:grid-cols-2">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div className="overflow-hidden rounded-2xl border border-[var(--kimexdi-border)] shadow-theme-sm">
+            <Image
+              src={KIMEXDI.images.about}
+              alt={KIMEXDI.images.aboutAlt}
+              width={800}
+              height={1000}
+              className="aspect-[4/3] w-full object-cover"
+            />
+          </div>
           <div>
             <SectionTitle>Présentation</SectionTitle>
             <Lead>
@@ -33,14 +43,14 @@ export default function AboutPage() {
             <p className="mt-4 rounded-lg border border-[var(--kimexdi-border)] bg-[var(--kimexdi-surface)] p-4 text-xs text-[var(--kimexdi-slate)]">
               {KIMEXDI.legalNote}
             </p>
-          </div>
-          <div>
-            <SectionTitle>Notre mission</SectionTitle>
-            <Lead>
+            <h3 className="mt-8 text-lg font-semibold text-[var(--kimexdi-navy)]">
+              Notre mission
+            </h3>
+            <p className="mt-2 text-base leading-relaxed text-[var(--kimexdi-slate)]">
               Coordonner les flux de marchandises de nos clients — transport,
               entreposage, import-export et groupage — avec une approche claire,
               mesurée et fiable.
-            </Lead>
+            </p>
           </div>
         </div>
       </Section>

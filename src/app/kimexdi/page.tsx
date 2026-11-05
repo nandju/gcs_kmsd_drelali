@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { KIMEXDI } from '@/config/kimexdi';
 import { CtaButton, Eyebrow, Lead, Section, SectionTitle } from '@/components/kimexdi/ui';
@@ -67,8 +68,18 @@ export default function KimexdiHomePage() {
   return (
     <main>
       {/* Hero */}
-      <section className="border-b border-[var(--kimexdi-border)] bg-[var(--kimexdi-navy)] text-white">
-        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+      <section className="relative overflow-hidden border-b border-[var(--kimexdi-border)] bg-[var(--kimexdi-navy)] text-white">
+        <Image
+          src={KIMEXDI.images.hero}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-25"
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--kimexdi-navy)] via-[var(--kimexdi-navy)]/85 to-[var(--kimexdi-navy)]/40" />
+        <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-white/60">
             KIMEXDI · KMSD Canada
           </p>
@@ -121,14 +132,25 @@ export default function KimexdiHomePage() {
             {KIMEXDI.services.slice(0, 4).map((s) => (
               <div
                 key={s.id}
-                className="rounded-xl border border-[var(--kimexdi-border)] bg-white p-5"
+                className="overflow-hidden rounded-xl border border-[var(--kimexdi-border)] bg-white"
               >
-                <h3 className="text-sm font-semibold text-[var(--kimexdi-navy)]">
-                  {s.title}
-                </h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-[var(--kimexdi-gray)]">
-                  {s.description}
-                </p>
+                <div className="relative aspect-[16/9] overflow-hidden">
+                  <Image
+                    src={s.image}
+                    alt={s.alt}
+                    fill
+                    sizes="(min-width: 640px) 25vw, 50vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-5">
+                  <h3 className="text-sm font-semibold text-[var(--kimexdi-navy)]">
+                    {s.title}
+                  </h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-[var(--kimexdi-gray)]">
+                    {s.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -170,7 +192,17 @@ export default function KimexdiHomePage() {
       {/* Groupage */}
       <Section>
         <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="rounded-2xl bg-[var(--kimexdi-blue-light)] p-8 sm:p-10">
+          <div className="overflow-hidden rounded-2xl bg-[var(--kimexdi-blue-light)]">
+            <div className="relative aspect-[16/7]">
+              <Image
+                src={KIMEXDI.images.groupage}
+                alt={KIMEXDI.images.groupageAlt}
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="p-8 sm:p-10">
             <Eyebrow>Service phare</Eyebrow>
             <SectionTitle>Le groupage</SectionTitle>
             <Lead>
@@ -194,6 +226,7 @@ export default function KimexdiHomePage() {
             </ul>
             <div className="mt-6">
               <CtaButton href="/kimexdi/devis">Demander un devis groupage</CtaButton>
+            </div>
             </div>
           </div>
           <div>
