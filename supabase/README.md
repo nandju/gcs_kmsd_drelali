@@ -1,6 +1,6 @@
 # Supabase — socle multi-organisations
 
-Documentation de la Phase 1B (migration v5.1 — durcissement final).
+Documentation de la Phase 1B (migration v5.3 — verrouillage concurrentiel).
 **Aucune de ces commandes n'a encore été exécutée.**
 
 ## Contenu
@@ -12,7 +12,44 @@ Documentation de la Phase 1B (migration v5.1 — durcissement final).
 | `tests/rls_security_tests.sql` | Tests RLS à exécuter dans le SQL Editor après le push (transactions annulées, aucune persistance). |
 | `seed.sql` | Volontairement sans données : le seed vit dans la migration pour être appliqué aussi au distant. Réservé à de futures données de démo locales. |
 
-## v5.1 — durcissement final
+## v5.3 — verrouillage concurrentiel du dernier admin
+
+- `private.lock_org_admin_guard(org)` : `pg_advisory_xact_lock` sur
+  `hashtextextended('socle_admin_guard:' || org_id)` — verrou
+  transactionnel (libéré à COMMIT/ROLLBACK), spécifique à chaque org.
+- Appelé par `prevent_last_org_admin_loss` (memberships) et
+  `prevent_last_admin_perm_loss` (role_permissions) **avant** le
+  comptage des admins restants → les deux chemins sont sérialisés
+  ensemble (scénarios C1–C3 couverts).
+- Super admin et contexte sans JWT (`auth.uid() IS NULL`) bypassent
+  **avant** le verrou : aucune perte de capacité exceptionnelle.
+- Deadlock : un seul verrou par opération (org de la ligne) ; les ops
+  multi-orgs sont réservées aux contextes bypassés.
+- Isolation : READ COMMITTED (défaut) — le comptage post-verrou voit
+  les commits concurrents. Sous REPEATABLE READ/SERIALIZABLE, revoir
+  (snapshot figé).
+- Tests de concurrence (2 sessions) : `supabase/tests/concurrence_deux_sessions.md`.
+
+## v5.2 — audit final
+
+- `prevent_role_protected_change` étendu à **INSERT + UPDATE** : un admin
+  ne peut ni créer un rôle `is_system=true`, ni promouvoir un rôle custom,
+  ni modifier `is_system` ; `organization_id` des rôles reste immuable
+  pour tout JWT (super admin inclus). Super admin / contexte sans JWT :
+  gestion complète conservée.
+- Nouveau trigger `membership_last_admin_guard` : une organisation ne
+  peut pas perdre son dernier administrateur par suppression,
+  désactivation ou rétrogradation d'un membership (sauf super admin /
+  maintenance). Les self-modifications restent aux gardes `self_*`.
+- Nouveau trigger `role_permissions_last_admin_guard` : même invariant
+  côté grants — impossible de retirer `organisation.administrer` de la
+  dernière source de droit admin d'une org (couvre le DELETE groupé
+  multi-lignes de façon atomique).
+- Tests : T2m (is_system INSERT/UPDATE), T6 (dernier admin : self-guard,
+  DELETE groupé atomique, retrait partiel autorisé, dernier refusé,
+  override super admin).
+
+## v5.1 — durcissement
 
 - `SET search_path = ''` uniformisé sur les **8 fonctions triggers**
   (identity_change, self_write, self_delete, role_protected_change,

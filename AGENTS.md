@@ -90,12 +90,25 @@ côté serveur lors de l'intégration Supabase/auth).
   compléter » — ne pas inventer de coordonnées, tarifs ou capacités).
 - Aucune messagerie interne : les demandes publiques sont gérées comme des
   soumissions structurées dans `/demandes`.
-- Supabase (phase 0 — connexion technique seulement) : clients dans
-  `src/lib/supabase/` (`client.ts` navigateur singleton, `server.ts` par
-  requête via cookies, `env.ts` validation). Variables :
-  `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-  (.env.local). Aucune table, aucune requête métier, auth non branchée ;
-  next-auth est installé mais jamais importé (pas de conflit).
+- Pages du template d'origine supprimées (phase 2) : site marketing
+  (/, /contact, /pricing, /privacy), /text-generator, /api/chat, lib/ai,
+  /signup, /reset-password, components/layout, components/generator,
+  components/sections. `/signin` = split-screen (visuels GCS/KIMEXDI,
+  panneau marine #12314e, accent cyan) + vrai signInWithPassword.
+- Supabase Auth (phase 2 — branchement réel) : `src/context/auth-store.tsx`
+  (AuthProvider/useAuth : session, profil, memberships+rôles+permissions
+  lus via RLS, org active `erp-active-org` revalidée, `hasPermission`,
+  `signOut`). `src/middleware.ts` : refresh de session @supabase/ssr +
+  garde des routes (tout ce qui n'est pas public exige une session ;
+  `/signup` redirige vers `/signin`). `(erp)/layout.tsx` : double garde
+  serveur (`getUser` → redirect) + `RequireOrg` (page « aucune
+  organisation » si compte sans membership). `/signin` = vrai
+  `signInWithPassword`. NextAuth reste installé mais inutilisé.
+- Supabase (phase 0 — clients) : `src/lib/supabase/` (`client.ts`
+  navigateur singleton, `server.ts` par requête via cookies, `env.ts`
+  validation). Variables : `NEXT_PUBLIC_SUPABASE_URL` +
+  `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (.env.local). Aucune clé
+  secrète côté frontend.
 - Références métier : LEAD-2026-XXXX, COT-XXXXX, MT-XXXXX, FAC-XXXXXX, PAY-XXXXXX,
   INC-XXXXXX, DEP-XXXXXX.
 - Le template d'origine n'a pas de shadcn/ui — ne pas l'ajouter ; utiliser les

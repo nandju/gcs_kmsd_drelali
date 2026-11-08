@@ -1,5 +1,5 @@
 /* ============================================================================
-   TESTS DE SÉCURITÉ RLS — Phase 1B v5.1 (socle multi-organisations)
+   TESTS DE SÉCURITÉ RLS — Phase 1B v5.2 (socle multi-organisations)
    ----------------------------------------------------------------------------
    À exécuter dans le SQL Editor Supabase (compte postgres) APRÈS :
      1. `supabase db push` (migration v5 appliquée)
@@ -369,6 +369,42 @@ begin
 end $$;
 rollback;
 
+/* ---- T2m : ADMIN GCS — protections is_system (INSERT + UPDATE) ----- */
+begin;
+set local role authenticated;
+set local "request.jwt.claims" =
+  '{"sub":"<U_ADMIN_GCS>","role":"authenticated"}';
+
+do $$
+declare v_role uuid;
+begin
+  -- T2m1 : ne peut PAS créer un rôle avec is_system = true
+  begin
+    insert into public.roles (organization_id, name, is_system)
+    values ('<O_GCS>', 'role-faux-systeme', true);
+    raise exception 'T2m1 ÉCHOUÉ : rôle système créé par un admin';
+  exception
+    when raise_exception then
+      if sqlerrm not like '%rôle système%' then raise; end if;
+      raise notice 'T2m1 OK : création rôle système refusée (trigger)';
+  end;
+
+  -- T2m2 : ne peut PAS promouvoir un rôle custom en rôle système
+  insert into public.roles (organization_id, name, description, is_system)
+  values ('<O_GCS>', 'role-test-temp3', 'Test', false)
+  returning id into v_role;
+  begin
+    update public.roles set is_system = true where id = v_role;
+    raise exception 'T2m2 ÉCHOUÉ : promotion custom → système autorisée';
+  exception
+    when raise_exception then
+      if sqlerrm not like '%système%' then raise; end if;
+      raise notice 'T2m2 OK : promotion custom → système refusée (trigger)';
+  end;
+  delete from public.roles where id = v_role;
+end $$;
+rollback;
+
 /* ---- T2j : ADMIN GCS — rôles PERSONNALISÉS gérables ----------------- */
 /* Vérifie que les protections rôles système ne bloquent pas le cas     */
 /* normal : création + suppression d'un rôle custom dans SA propre org. */
@@ -481,7 +517,115 @@ begin
 end $$;
 rollback;
 
+/* ================= T6 : DERNIER ADMINISTRATEUR ====================== */
+/* Fixture postgres : org TESTORG avec 2 rôles custom admin + un rôle   */
+/* lecteur + 3 memberships. Puis tests en tant qu'utilisateurs.         */
+begin;
+do $$
+declare v_org uuid; v_ra uuid; v_rb uuid; v_rl uuid;
+begin
+  insert into public.organizations (code, display_name, country, currency, timezone)
+  values ('TESTORG','Test Org','Test','XOF','UTC') returning id into v_org;
+  insert into public.roles (organization_id, name, is_system) values
+    (v_org, 'admin-a', false) returning id into v_ra;
+  insert into public.roles (organization_id, name, is_system) values
+    (v_org, 'admin-b', false) returning id into v_rb;
+  insert into public.roles (organization_id, name, is_system) values
+    (v_org, 'lecteur-t', false) returning id into v_rl;
+  insert into public.role_permissions (role_id, permission_id) values
+    (v_ra, 'organisation.administrer'),
+    (v_rb, 'organisation.administrer'),
+    (v_rl, 'demandes.lire');
+  insert into public.memberships (user_id, organization_id, role_id) values
+    ('<U_SANS_ORG>',  v_org, v_ra),
+    ('<U_ADMIN_KIM>', v_org, v_rb);
+end $$;
+
+set local role authenticated;
+set local "request.jwt.claims" =
+  '{"sub":"<U_SANS_ORG>","role":"authenticated"}';
+
+do $$
+declare n int; v_org uuid; v_ra uuid; v_rb uuid; v_rl uuid;
+begin
+  select id into v_org from public.organizations where code = 'TESTORG';
+  select id into v_ra from public.roles where organization_id = v_org and name = 'admin-a';
+  select id into v_rb from public.roles where organization_id = v_org and name = 'admin-b';
+  select id into v_rl from public.roles where organization_id = v_org and name = 'lecteur-t';
+
+  -- T6a : ne peut PAS changer SON PROPRE rôle (self guard)
+  begin
+    update public.memberships set role_id = v_rl
+     where user_id = auth.uid() and organization_id = v_org;
+    raise exception 'T6a ÉCHOUÉ : self role change autorisé';
+  exception when raise_exception then
+    if sqlerrm not like '%propre appartenance%' then raise; end if;
+    raise notice 'T6a OK : self role change refusé';
+  end;
+
+  -- T6b : DELETE groupé des DEUX sources admin → bloqué (atomicité)
+  begin
+    delete from public.role_permissions
+     where role_id in (v_ra, v_rb)
+       and permission_id = 'organisation.administrer';
+    raise exception 'T6b ÉCHOUÉ : dernier admin supprimé en masse';
+  exception when raise_exception then
+    if sqlerrm not like '%administrateur%' then raise; end if;
+    raise notice 'T6b OK : perte groupée du dernier admin bloquée';
+  end;
+
+  -- T6c : retirer UNE source admin (admin-a) → autorisé (admin-b reste)
+  delete from public.role_permissions
+   where role_id = v_ra and permission_id = 'organisation.administrer';
+  get diagnostics n = row_count;
+  assert n = 1, 'T6c ÉCHOUÉ : retrait source admin = ' || n || ' ligne(s)';
+  raise notice 'T6c OK : retrait partiel autorisé (un admin subsiste)';
+end $$;
+
+-- Bascule sur U_ADMIN_KIM (admin via admin-b, encore pourvu)
+set local "request.jwt.claims" =
+  '{"sub":"<U_ADMIN_KIM>","role":"authenticated"}';
+
+do $$
+declare n int; v_org uuid; v_ra uuid; v_rb uuid;
+begin
+  select id into v_org from public.organizations where code = 'TESTORG';
+  select id into v_ra from public.roles where organization_id = v_org and name = 'admin-a';
+  select id into v_rb from public.roles where organization_id = v_org and name = 'admin-b';
+
+  -- T6d : retirer la DERNIÈRE source admin restante → bloqué
+  begin
+    delete from public.role_permissions
+     where role_id = v_rb and permission_id = 'organisation.administrer';
+    raise exception 'T6d ÉCHOUÉ : dernière source admin retirée';
+  exception when raise_exception then
+    if sqlerrm not like '%administrateur%' then raise; end if;
+    raise notice 'T6d OK : retrait dernière source admin bloqué';
+  end;
+end $$;
+
+-- Super admin : override explicite
+set local "request.jwt.claims" =
+  '{"sub":"<U_SUPER>","role":"authenticated"}';
+
+do $$
+declare n int; v_org uuid; v_rb uuid;
+begin
+  select id into v_org from public.organizations where code = 'TESTORG';
+  select id into v_rb from public.roles where organization_id = v_org and name = 'admin-b';
+  delete from public.role_permissions
+   where role_id = v_rb and permission_id = 'organisation.administrer';
+  get diagnostics n = row_count;
+  assert n = 1, 'T6e ÉCHOUÉ : super admin ne peut pas lever la protection';
+  raise notice 'T6e OK : super admin peut lever la protection (exception)';
+end $$;
+rollback;
+
 /* ================= T5 : trigger profil (amorçage) =================== */
+-- NOTE v5.3 : les tests de CONCURRENCE (2 sessions simultanées sur le
+-- verrou advisory du dernier admin) ne peuvent pas tenir dans ce
+-- fichier mono-transaction. Voir le protocole complet :
+--   supabase/tests/concurrence_deux_sessions.md  (scénarios C1–C6)
 -- Vérification MANUELLE (hors transaction) : après invitation d'un nouvel
 -- utilisateur, vérifier qu'une ligne profiles existe :
 --   select id, email, is_super_admin from public.profiles

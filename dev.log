@@ -1,0 +1,403 @@
+
+> ai-starter-kit-oss@1.0.0 dev
+> next dev
+
+   ▲ Next.js 15.2.6
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.66:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.3s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 965ms (204 modules)
+ ○ Compiling /signin ...
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (115kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (272kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled /signin in 5.2s (1018 modules)
+ GET /signin 200 in 5855ms
+ ✓ Compiled in 708ms (420 modules)
+ GET /signin?next=%2Ftableau-de-bord 200 in 57ms
+ ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled /icon.svg in 319ms (605 modules)
+ GET /icon.svg?b18dfbfdc8d6cb64 200 in 683ms
+ ✓ Compiled in 566ms (420 modules)
+ GET /signin?next=%2Ftableau-de-bord 200 in 140ms
+ ✓ Compiled in 327ms (420 modules)
+ GET /signin?next=%2Ftableau-de-bord 200 in 44ms
+ ✓ Compiled in 331ms (420 modules)
+ GET /signin?next=%2Ftableau-de-bord 200 in 41ms
+ ✓ Compiled in 315ms (420 modules)
+ ✓ Compiled in 436ms (420 modules)
+ ✓ Compiled in 239ms (420 modules)
+ ✓ Compiled /_not-found in 216ms (1012 modules)
+ GET /signin?next=%2Ftableau-de-bord 404 in 478ms
+ ✓ Compiled in 257ms (420 modules)
+ ✓ Compiled in 361ms (420 modules)
+ GET /signin?next=%2Ftableau-de-bord 200 in 374ms
+ GET /_next/static/css/app/layout.css?v=1794070304502 404 in 81ms
+ ✓ Compiled in 414ms (420 modules)
+ GET /_next/static/chunks/main-app.js?v=1794070304502 404 in 204ms
+ GET /_next/static/chunks/app/(site)/(auth)/signin/page.js 404 in 202ms
+ GET /_next/static/chunks/app/not-found.js 404 in 199ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 209ms
+ ✓ Compiled in 289ms (420 modules)
+ ✓ Compiled in 290ms (420 modules)
+ ✓ Compiled in 243ms (420 modules)
+ ✓ Compiled in 304ms (420 modules)
+ ✓ Compiled in 232ms (420 modules)
+ ✓ Compiled in 319ms (420 modules)
+ ✓ Compiled in 307ms (420 modules)
+ ✓ Compiled in 290ms (420 modules)
+ ✓ Compiled in 290ms (420 modules)
+ ✓ Compiled in 325ms (420 modules)
+ ✓ Compiled in 302ms (420 modules)
+ ✓ Compiled in 350ms (420 modules)
+ ✓ Compiled in 288ms (420 modules)
+ ✓ Compiled in 266ms (420 modules)
+ GET /signin?next=%2Ftableau-de-bord 200 in 426ms
+ ✓ Compiled in 379ms (420 modules)
+ GET /_next/static/css/app/layout.css?v=1794070309243 404 in 90ms
+ ✓ Compiled in 580ms (420 modules)
+ GET /_next/static/chunks/app-pages-internals.js 404 in 271ms
+ GET /_next/static/chunks/main-app.js?v=1794070309243 404 in 500ms
+ GET /_next/static/chunks/app/(site)/(auth)/signin/page.js 404 in 272ms
+ GET /_next/static/chunks/app/not-found.js 404 in 271ms
+ ✓ Compiled in 272ms (420 modules)
+ ✓ Compiled in 270ms (420 modules)
+ GET /signin?next=%2Ftableau-de-bord 200 in 383ms
+ ✓ Compiled in 409ms (420 modules)
+ GET /_next/static/css/app/layout.css?v=1794070310752 404 in 124ms
+ ✓ Compiled in 501ms (420 modules)
+ ✓ Compiled in 325ms (420 modules)
+ GET /signin?next=%2Ftableau-de-bord 200 in 543ms
+ ⨯ SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>)
+ ✓ Compiled in 422ms (420 modules)
+ GET /_next/static/chunks/main-app.js?v=1794070311901 404 in 771ms
+ ✓ Compiled in 983ms (420 modules)
+ GET /_next/static/chunks/app-pages-internals.js 404 in 1590ms
+ ✓ Compiled in 1784ms (420 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 3.6s (1356 modules)
+ GET /_next/static/css/app/layout.css?v=1794070311901 500 in 6971ms
+ GET /_next/static/chunks/app/(site)/(auth)/signin/page.js 404 in 3318ms
+ GET /_next/static/chunks/app/not-found.js 404 in 53ms
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\app\icon.svg\route.js'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\oncle_rodrigue\\ai-saas-starter-kit-nextjs-main\\.next\\server\\app\\icon.svg\\route.js',
+  page: '/icon.svg'
+}
+ GET /icon.svg?b18dfbfdc8d6cb64 500 in 604ms
+ GET /signin?next=%2Ftableau-de-bord 200 in 145ms
+ GET /_next/static/css/app/layout.css?v=1794070320465 404 in 65ms
+ GET /_next/static/chunks/main-app.js?v=1794070320465 404 in 81ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 80ms
+ GET /_next/static/chunks/app/(site)/(auth)/signin/page.js 404 in 73ms
+ GET /_next/static/chunks/app/not-found.js 404 in 73ms
+ ✓ Compiled in 384ms (662 modules)
+ ✓ Compiled in 327ms (662 modules)
+ ✓ Compiled in 298ms (662 modules)
+ ✓ Compiled in 559ms (662 modules)
+ ✓ Compiled in 445ms (661 modules)
+ ✓ Compiled in 398ms (661 modules)
+ ✓ Compiled in 403ms (661 modules)
+ ✓ Compiled in 477ms (661 modules)
+ ✓ Compiled in 453ms (661 modules)
+ ✓ Compiled in 381ms (661 modules)
+ ✓ Compiled in 362ms (661 modules)
+ ✓ Compiled in 376ms (661 modules)
+ ✓ Compiled in 369ms (661 modules)
+ ✓ Compiled in 337ms (661 modules)
+ ✓ Compiled in 372ms (661 modules)
+ ✓ Compiled in 455ms (661 modules)
+ ✓ Compiled in 462ms (661 modules)
+ ✓ Compiled in 447ms (661 modules)
+ ✓ Compiled in 339ms (661 modules)
+ ✓ Compiled in 458ms (661 modules)
+ ✓ Compiled in 396ms (661 modules)
+ ✓ Compiled in 418ms (661 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\client-development\3.pack.gz_' -> 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\client-development\3.pack.gz'
+ ✓ Compiled in 2s (1508 modules)
+ ✓ Compiled in 351ms (664 modules)
+ ✓ Compiled in 1155ms (1508 modules)
+ ✓ Compiled in 1030ms (1508 modules)
+ ✓ Compiled in 966ms (1508 modules)
+ ✓ Compiled in 974ms (868 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\client-development\0.pack.gz'
+ ✓ Compiled in 489ms (1304 modules)
+ ✓ Compiled in 225ms (664 modules)
+ ✓ Compiled in 229ms (664 modules)
+ ✓ Compiled in 216ms (664 modules)
+ ✓ Compiled in 234ms (664 modules)
+ ✓ Compiled in 220ms (664 modules)
+ ✓ Compiled in 267ms (664 modules)
+ ✓ Compiled in 227ms (664 modules)
+ ✓ Compiled in 218ms (664 modules)
+ ✓ Compiled in 226ms (664 modules)
+ ✓ Compiled in 249ms (664 modules)
+ ✓ Compiled in 228ms (664 modules)
+ ✓ Compiled in 247ms (664 modules)
+ ✓ Compiled in 249ms (664 modules)
+ ✓ Compiled in 247ms (664 modules)
+ ✓ Compiled in 305ms (664 modules)
+ ✓ Compiled in 282ms (664 modules)
+ ✓ Compiled in 312ms (664 modules)
+ ✓ Compiled in 292ms (664 modules)
+ ✓ Compiled in 232ms (664 modules)
+ ✓ Compiled in 245ms (664 modules)
+ ✓ Compiled in 263ms (664 modules)
+ ✓ Compiled in 233ms (664 modules)
+ ✓ Compiled in 309ms (664 modules)
+ ✓ Compiled in 335ms (664 modules)
+ ✓ Compiled in 262ms (664 modules)
+ ✓ Compiled in 263ms (664 modules)
+ ✓ Compiled in 323ms (664 modules)
+ ✓ Compiled in 374ms (664 modules)
+ ✓ Compiled in 436ms (664 modules)
+ ✓ Compiled in 489ms (664 modules)
+ ✓ Compiled in 421ms (664 modules)
+ ✓ Compiled in 509ms (664 modules)
+ ✓ Compiled in 596ms (664 modules)
+ ✓ Compiled in 383ms (664 modules)
+ ✓ Compiled in 317ms (664 modules)
+ ✓ Compiled in 266ms (664 modules)
+ ✓ Compiled in 454ms (664 modules)
+ ✓ Compiled in 305ms (664 modules)
+ ✓ Compiled in 338ms (664 modules)
+ ✓ Compiled in 472ms (664 modules)
+ ✓ Compiled in 343ms (664 modules)
+ ✓ Compiled in 287ms (664 modules)
+ ✓ Compiled in 276ms (664 modules)
+ ✓ Compiled in 279ms (664 modules)
+ ✓ Compiled in 334ms (664 modules)
+ ✓ Compiled in 266ms (664 modules)
+ ✓ Compiled in 285ms (664 modules)
+ ✓ Compiled in 268ms (664 modules)
+ ✓ Compiled in 395ms (664 modules)
+ ✓ Compiled in 472ms (664 modules)
+ ✓ Compiled in 349ms (664 modules)
+ ✓ Compiled in 333ms (664 modules)
+ ✓ Compiled in 341ms (664 modules)
+ ✓ Compiled in 325ms (664 modules)
+ ✓ Compiled in 332ms (664 modules)
+ ✓ Compiled in 324ms (664 modules)
+ ✓ Compiled in 519ms (664 modules)
+ ✓ Compiled in 484ms (664 modules)
+ ✓ Compiled in 453ms (664 modules)
+ ✓ Compiled in 351ms (664 modules)
+ ✓ Compiled in 400ms (664 modules)
+ ✓ Compiled in 402ms (664 modules)
+ ✓ Compiled in 523ms (664 modules)
+ ✓ Compiled in 449ms (664 modules)
+ ✓ Compiled in 398ms (664 modules)
+ ✓ Compiled in 389ms (664 modules)
+ ✓ Compiled in 447ms (664 modules)
+ ✓ Compiled in 535ms (664 modules)
+ ✓ Compiled in 439ms (664 modules)
+ ✓ Compiled in 460ms (664 modules)
+ ✓ Compiled in 481ms (664 modules)
+ ✓ Compiled in 379ms (664 modules)
+ ✓ Compiled in 419ms (664 modules)
+ ✓ Compiled in 544ms (664 modules)
+ ✓ Compiled in 438ms (664 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (115kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (272kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled in 476ms (664 modules)
+ ✓ Compiled in 481ms (664 modules)
+ ✓ Compiled in 311ms (664 modules)
+ ✓ Compiled in 236ms (664 modules)
+ ✓ Compiled in 247ms (664 modules)
+ ✓ Compiled in 305ms (664 modules)
+ ✓ Compiled in 299ms (664 modules)
+ ✓ Compiled in 253ms (664 modules)
+ ✓ Compiled in 237ms (664 modules)
+ ✓ Compiled in 284ms (664 modules)
+ ✓ Compiled in 233ms (664 modules)
+ ✓ Compiled in 263ms (664 modules)
+ ✓ Compiled in 280ms (664 modules)
+ ✓ Compiled in 346ms (664 modules)
+[Error: ENOENT: no such file or directory, stat 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\client-development\0.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'C:\\oncle_rodrigue\\ai-saas-starter-kit-nextjs-main\\.next\\cache\\webpack\\client-development\\0.pack.gz'
+}
+ ⨯ unhandledRejection: [Error: ENOENT: no such file or directory, stat 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\client-development\0.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'C:\\oncle_rodrigue\\ai-saas-starter-kit-nextjs-main\\.next\\cache\\webpack\\client-development\\0.pack.gz'
+}
+ ⨯ unhandledRejection:  [Error: ENOENT: no such file or directory, stat 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\client-development\0.pack.gz'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: 'C:\\oncle_rodrigue\\ai-saas-starter-kit-nextjs-main\\.next\\cache\\webpack\\client-development\\0.pack.gz'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, stat 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\client-development\0.pack.gz'
+ ⨯ TypeError: e[o] is not a function
+    at Object.t [as require] (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:1:127)
+    at JSON.parse (<anonymous>) {
+  digest: '887481366'
+}
+TypeError: e[o] is not a function
+    at Object.t [as require] (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:1:127)
+    at JSON.parse (<anonymous>)
+ ⨯ TypeError: e[o] is not a function
+    at Object.t [as require] (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:1:127)
+    at JSON.parse (<anonymous>) {
+  page: '/signin'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 763ms (1333 modules)
+ ⨯ Error: Cannot find module './8548.js'
+Require stack:
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\pages\_document.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\require.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\load-components.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\utils.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\swc\options.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\swc\index.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\next-config-ts\transpile-config.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\config.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\next.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:198:28)
+    at <unknown> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:162:22)
+    at <unknown> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\pages\_document.js:1:392)
+    at Object.<anonymous> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\pages\_document.js:1:435) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ GET /signin?next=%2Ftableau-de-bord 500 in 1761ms
+ ⨯ Error: Cannot find module './4447.js'
+Require stack:
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\pages\_document.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\require.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\load-components.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\utils.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\swc\options.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\swc\index.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\next-config-ts\transpile-config.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\config.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\next.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:198:28)
+    at <unknown> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:162:22)
+    at <unknown> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\app\(site)\(auth)\signin\page.js:1:8911)
+    at Object.<anonymous> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\app\(site)\(auth)\signin\page.js:1:8974) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/signin'
+}
+ ⨯ Error: Cannot find module './8548.js'
+Require stack:
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\pages\_document.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\require.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\load-components.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\utils.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\swc\options.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\swc\index.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\build\next-config-ts\transpile-config.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\config.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\next.js
+- C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\node_modules\next\dist\server\lib\start-server.js
+    at __webpack_require__.f.require (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:198:28)
+    at <unknown> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:111:40)
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\webpack-runtime.js:162:22)
+    at <unknown> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\pages\_document.js:1:392)
+    at Object.<anonymous> (C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\pages\_document.js:1:435) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ GET /signin?next=%2Ftableau-de-bord 500 in 113ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 576ms (683 modules)
+ GET /_next/static/chunks/fallback/pages/_error.js 404 in 1154ms
+ GET /_next/static/chunks/fallback/react-refresh.js 404 in 1167ms
+ GET /_next/static/chunks/fallback/main.js 404 in 1173ms
+ GET /_next/static/chunks/fallback/pages/_app.js 404 in 1158ms
+ GET /_next/static/chunks/fallback/webpack.js 404 in 1185ms
+ GET /signin?next=%2Ftableau-de-bord 200 in 199ms
+ GET /_next/static/css/app/layout.css?v=1794070680137 404 in 89ms
+ GET /_next/static/chunks/main-app.js?v=1794070680137 404 in 285ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 284ms
+ GET /_next/static/chunks/app/not-found.js 404 in 282ms
+ GET /_next/static/chunks/app/(site)/(auth)/signin/page.js 404 in 284ms
+ ✓ Compiled /icon.svg in 341ms (699 modules)
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\app-paths-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\oncle_rodrigue\\ai-saas-starter-kit-nextjs-main\\.next\\server\\app-paths-manifest.json',
+  page: '/icon.svg'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\server\pages-manifest.json'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\oncle_rodrigue\\ai-saas-starter-kit-nextjs-main\\.next\\server\\pages-manifest.json'
+}
+ GET /icon.svg?b18dfbfdc8d6cb64 500 in 764ms
+ ✓ Compiled in 435ms (665 modules)
+ ✓ Compiled in 426ms (665 modules)
+ GET /signin?next=%2Ftableau-de-bord 404 in 36ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 39ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 27ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 20ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 28ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 17ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 30ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 21ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 28ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 20ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 26ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 21ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 31ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 35ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 33ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 21ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 26ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 29ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 25ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 23ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 30ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 31ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 33ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 21ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 31ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 29ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 22ms
+ GET /signin?next=%2Ftableau-de-bord 404 in 28ms
+ GET /signin?next=%2Ftableau-de-bord 200 in 811ms
+ ✓ Compiled in 413ms (665 modules)
+ ✓ Compiled in 367ms (665 modules)
+ ✓ Compiled in 370ms (665 modules)
+ ✓ Compiled in 398ms (665 modules)
+ ✓ Compiled in 490ms (665 modules)
+ ✓ Compiled in 385ms (665 modules)
+ ✓ Compiled in 370ms (665 modules)
+ ✓ Compiled in 371ms (665 modules)
+ ✓ Compiled in 380ms (665 modules)
+ ✓ Compiled in 386ms (665 modules)
+ ✓ Compiled in 364ms (665 modules)
+ ✓ Compiled in 415ms (665 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, stat 'C:\oncle_rodrigue\ai-saas-starter-kit-nextjs-main\.next\cache\webpack\server-development\1.pack.gz'

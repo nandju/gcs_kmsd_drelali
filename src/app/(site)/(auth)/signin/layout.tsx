@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign In",
+  title: "Connexion",
 };
 
 export default function Layout({ children }: PropsWithChildren) {

@@ -10,6 +10,7 @@ import { MISSION_STATUS } from '@/lib/erp/labels';
 import type { Mission } from '@/lib/erp/types';
 import { Badge, Button, Field, inputClass } from '@/components/erp/ui';
 import { Modal } from '@/components/ui/modal/modal';
+import { RequireOrg } from '@/components/auth/require-org';
 
 function DriverMissionCard({ mission, driverName }: { mission: Mission; driverName: string }) {
   const s = useErp();
@@ -219,7 +220,7 @@ function DriverMissionCard({ mission, driverName }: { mission: Mission; driverNa
   );
 }
 
-export default function DriverPage() {
+function DriverPageContent() {
   const s = useErp();
   const [driverId, setDriverId] = useState('d1');
   const driver = s.drivers.find((d) => d.id === driverId);
@@ -278,5 +279,13 @@ export default function DriverPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function DriverPage() {
+  return (
+    <RequireOrg>
+      <DriverPageContent />
+    </RequireOrg>
   );
 }

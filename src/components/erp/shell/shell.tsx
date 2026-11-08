@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { ORGANIZATIONS, ORG_LIST } from '@/config/organizations';
 import { useErp } from '@/context/erp-store';
+import { useAuth } from '@/context/auth-store';
 import { useClickOutside } from '@/hooks/use-click-outside';
 import { formatDateTime } from '@/lib/erp/format';
 import type { SearchKind } from '@/lib/erp/types';
@@ -201,11 +202,37 @@ function Notifications() {
 /* --------------------------- Org switcher ----------------------------- */
 
 function OrgSwitcher() {
-  const { org, setOrg } = useErp();
+  const { orgs, activeOrg, setActiveOrg, profile } = useAuth();
   const [open, setOpen] = useState(false);
   const close = useCallback(() => setOpen(false), []);
   const ref = useClickOutside<HTMLDivElement>(close);
-  const current = ORGANIZATIONS[org];
+  // Super admin sans membership : on affiche toutes les orgs connues pour
+  // ne pas bloquer l'espace central (les données restent filtrées par RLS).
+  const options =
+    orgs.length > 0
+      ? orgs.map((o) => ({
+          code: o.code,
+          displayName: o.displayName,
+          country: o.country,
+          currency: o.currency,
+          accentColor: o.accentColor ?? ORGANIZATIONS[o.code].accentColor,
+          roleName: o.roleName,
+        }))
+      : profile?.isSuperAdmin
+        ? ORG_LIST.map((o) => ({
+            code: o.code,
+            displayName: o.displayName,
+            country: o.country,
+            currency: o.currency,
+            accentColor: o.accentColor,
+            roleName: 'Super administrateur',
+          }))
+        : [];
+  const current = activeOrg
+    ? options.find((o) => o.code === activeOrg)
+    : undefined;
+
+  if (!current || options.length === 0) return null;
 
   return (
     <div ref={ref} className="relative">
@@ -224,15 +251,15 @@ function OrgSwitcher() {
       </button>
       {open && (
         <div className="absolute left-0 top-full z-40 mt-1 w-72 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-theme-lg">
-          {ORG_LIST.map((o) => (
+          {options.map((o) => (
             <button
               key={o.code}
               className={cn(
                 'flex w-full items-start gap-3 px-4 py-3 text-left hover:bg-gray-50',
-                o.code === org && 'bg-cyan-50/50',
+                o.code === activeOrg && 'bg-cyan-50/50',
               )}
               onClick={() => {
-                setOrg(o.code);
+                setActiveOrg(o.code);
                 setOpen(false);
               }}
             >
@@ -241,14 +268,11 @@ function OrgSwitcher() {
                 <span className="block text-sm font-medium text-gray-800">{o.displayName}</span>
                 <span className="block text-xs text-gray-500">
                   {o.country} · {o.currency}
-                  {o.code !== 'GCS' && ' · Espace de démonstration'}
+                  {o.roleName && ` · ${o.roleName}`}
                 </span>
               </span>
             </button>
           ))}
-          <p className="border-t border-gray-100 bg-gray-50 px-4 py-2 text-[11px] text-gray-400">
-            Changement d’espace local à la démonstration — aucune autorisation serveur n’est simulée.
-          </p>
         </div>
       )}
     </div>
@@ -261,6 +285,17 @@ function ProfileMenu() {
   const [open, setOpen] = useState(false);
   const close = useCallback(() => setOpen(false), []);
   const ref = useClickOutside<HTMLDivElement>(close);
+  const { profile, signOut, status } = useAuth();
+  const displayName =
+    profile?.fullName?.trim() || profile?.email || 'Compte';
+  const initials = displayName
+    .split(/[\s@.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
+  const [signingOut, setSigningOut] = useState(false);
+
   return (
     <div ref={ref} className="relative">
       <button
@@ -269,14 +304,21 @@ function ProfileMenu() {
         aria-label="Menu du profil"
       >
         <span className="flex size-8 items-center justify-center rounded-full bg-cyan-800 text-xs font-bold text-white">
-          DG
+          {status === 'loading' ? '…' : initials || '?'}
         </span>
       </button>
       {open && (
         <div className="absolute right-0 top-full z-40 mt-1 w-56 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-theme-lg">
           <div className="border-b border-gray-100 px-4 py-3">
-            <p className="text-sm font-semibold text-gray-800">Direction (démo)</p>
-            <p className="text-xs text-gray-500">direction@exemple.ci</p>
+            <p className="text-sm font-semibold text-gray-800">{displayName}</p>
+            {profile?.email && (
+              <p className="text-xs text-gray-500">{profile.email}</p>
+            )}
+            {profile?.isSuperAdmin && (
+              <p className="mt-1 text-[11px] font-medium text-violet-600">
+                Super administrateur
+              </p>
+            )}
           </div>
           <Link href="/parametres" className="block px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50" onClick={close}>
             Paramètres
@@ -293,6 +335,16 @@ function ProfileMenu() {
           <Link href="/kimexdi" className="block px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50" onClick={close}>
             Site public KIMEXDI
           </Link>
+          <button
+            className="block w-full px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
+            disabled={signingOut}
+            onClick={async () => {
+              setSigningOut(true);
+              await signOut();
+            }}
+          >
+            {signingOut ? 'Déconnexion…' : 'Se déconnecter'}
+          </button>
         </div>
       )}
     </div>

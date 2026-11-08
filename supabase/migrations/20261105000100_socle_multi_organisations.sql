@@ -1,5 +1,5 @@
 /* ============================================================================
-   PHASE 1B — SOCLE MULTI-ORGANISATIONS (v5.1 — durcissement final)
+   PHASE 1B — SOCLE MULTI-ORGANISATIONS (v5.3 — verrouillage concurrentiel)
    Tables : organizations, profiles, roles, permissions,
             role_permissions, memberships
    Sécurité : RLS total, fonctions SECURITY DEFINER en schéma privé
@@ -238,27 +238,40 @@ create trigger membership_self_delete_guard
   before delete on public.memberships
   for each row execute function private.prevent_self_membership_delete();
 
-/* ---- Garde : rôles — org, nom système et flag is_system immuables - */
+/* ---- Garde : rôles — org, nom système, flag is_system ------------- */
+/* organization_id : immuable pour TOUT utilisateur authentifié (la    */
+/* FK composite protégée les memberships ; on bloque aussi la source). */
+/* is_system : INSERT et UPDATE réservés au super admin / contexte     */
+/* sans JWT — un admin ne peut ni créer un faux rôle système, ni       */
+/* promouvoir un rôle custom, ni rétrograder un rôle système.          */
+/* Nom : immuable pour les rôles système (clients non super admin).    */
 create or replace function private.prevent_role_protected_change()
 returns trigger language plpgsql
 set search_path = '' as $$
 begin
-  if auth.uid() is null then return new; end if;
-  if new.organization_id <> old.organization_id then
+  if tg_op = 'INSERT' then
+    if new.is_system
+       and auth.uid() is not null
+       and not private.is_super_admin() then
+      raise exception 'Seul le super administrateur peut créer un rôle système.';
+    end if;
+    return new;
+  end if;
+  -- UPDATE : organization_id immuable pour tout JWT (super admin inclus)
+  if auth.uid() is not null and new.organization_id <> old.organization_id then
     raise exception 'Le rattachement d''un rôle à une organisation est immuable.';
   end if;
-  if old.is_system then
-    if not new.is_system then
-      raise exception 'Un rôle système ne peut pas perdre son statut système.';
-    end if;
-    if new.name <> old.name then
-      raise exception 'Le nom d''un rôle système est immuable.';
-    end if;
+  if auth.uid() is null or private.is_super_admin() then return new; end if;
+  if new.is_system <> old.is_system then
+    raise exception 'Le statut système d''un rôle ne peut être modifié que par le super administrateur.';
+  end if;
+  if old.is_system and new.name <> old.name then
+    raise exception 'Le nom d''un rôle système est immuable.';
   end if;
   return new;
 end; $$;
 create trigger role_protected_guard
-  before update on public.roles
+  before insert or update on public.roles
   for each row execute function private.prevent_role_protected_change();
 
 /* ---- Garde : permissions des rôles SYSTÈME ------------------------ */
@@ -297,6 +310,148 @@ end; $$;
 create trigger role_permissions_system_guard
   before insert or update or delete on public.role_permissions
   for each row execute function private.prevent_system_role_perm_change();
+
+/* ---- Verrou advisory par organisation (sérialisation) ------------- */
+/* pg_advisory_xact_lock : verrou de niveau transaction, libéré        */
+/* automatiquement à COMMIT ou ROLLBACK (couverture C6).               */
+/* Clé = hash 64 bits de 'socle_admin_guard:' || org_id :              */
+/*   - déterministe : même org → même clé, orgs différentes → clés     */
+/*     différentes (pas de blocage mutuel inutile, couverture C4) ;    */
+/*   - réentrant pour une même session (DELETE/UPDATE multi-lignes     */
+/*     sur la même org ne se bloquent pas eux-mêmes).                  */
+/* Stratégie deadlock : chaque déclencheur ne prend QU'UN verrou (celui */
+/* de l'org de la ligne traitée). Une opération touchant plusieurs      */
+/* orgs ne peut être faite que par le super admin ou le contexte sans  */
+/* JWT — qui bypassent AVANT toute acquisition de verrou. Il n'existe  */
+/* donc pas d'ordre de verrous multiples inversé possible entre deux   */
+/* sessions ordinaires.                                                */
+/*                                                                     */
+/* Isolation READ COMMITTED (défaut Supabase) : le comptage des        */
+/* administrateurs est refait APRÈS acquisition du verrou et voit les  */
+/* données les plus récemment COMMITTÉES — un concurrent qui a validé  */
+/* son retrait est donc visible. Sans ce re-comptage post-verrou,      */
+/* le snapshot de statement suffirait sous READ COMMITTED ; sous       */
+/* REPEATABLE READ ou SERIALIZABLE, le snapshot figé pourrait masquer  */
+/* le commit concurrent — voir note dans supabase/README.md.           */
+create or replace function private.lock_org_admin_guard(org uuid)
+returns void language plpgsql security definer
+set search_path = '' as $$
+begin
+  perform pg_catalog.pg_advisory_xact_lock(
+    pg_catalog.hashtextextended('socle_admin_guard:' || org::text, 0));
+end; $$;
+
+/* ---- Garde : dernier administrateur d'une organisation ------------- */
+/* Une org ne doit jamais perdre son dernier administrateur (permission */
+/* 'organisation.administrer') par suppression, désactivation ou        */
+/* rétrogradation d'un membership. Le super admin et les contextes     */
+/* sans JWT (maintenance) restent prioritaires. Les modifications du   */
+/* PROPRE membership relèvent des gardes self_* dédiées (skip ici).    */
+create or replace function private.prevent_last_org_admin_loss()
+returns trigger language plpgsql security definer
+set search_path = '' as $$
+declare v_org uuid; v_remaining int;
+begin
+  if auth.uid() is null or private.is_super_admin() then
+    if tg_op = 'DELETE' then return old; else return new; end if;
+  end if;
+  if tg_op = 'DELETE' then
+    if old.user_id = auth.uid() then return old; end if;
+    if not (old.is_active and exists (
+        select 1 from public.role_permissions rp
+        where rp.role_id = old.role_id
+          and rp.permission_id = 'organisation.administrer')) then
+      return old;
+    end if;
+    -- Verrou AVANT le comptage : sérialise avec les autres retraits
+    -- d'admin de la même org (memberships ET role_permissions).
+    perform private.lock_org_admin_guard(old.organization_id);
+    v_org := old.organization_id;
+    select count(*) into v_remaining
+      from public.memberships m
+     where m.organization_id = v_org and m.is_active and m.id <> old.id
+       and exists (select 1 from public.role_permissions rp
+                    where rp.role_id = m.role_id
+                      and rp.permission_id = 'organisation.administrer');
+    if v_remaining = 0 then
+      raise exception 'Impossible de supprimer le dernier administrateur de l''organisation.';
+    end if;
+    return old;
+  end if;
+  -- UPDATE
+  if new.user_id = auth.uid() then return new; end if;
+  if not (old.is_active and exists (
+      select 1 from public.role_permissions rp
+      where rp.role_id = old.role_id
+        and rp.permission_id = 'organisation.administrer')) then
+    return new;
+  end if;
+  -- Verrou AVANT d'évaluer le nouvel état : une session concurrente
+  -- peut retirer 'organisation.administrer' du rôle d'arrivée pendant
+  -- qu'on attend le verrou — le test doit voir l'état post-commit.
+  perform private.lock_org_admin_guard(old.organization_id);
+  if new.is_active and exists (
+      select 1 from public.role_permissions rp
+      where rp.role_id = new.role_id
+        and rp.permission_id = 'organisation.administrer') then
+    return new;
+  end if;
+  v_org := old.organization_id;
+  select count(*) into v_remaining
+    from public.memberships m
+   where m.organization_id = v_org and m.is_active and m.id <> old.id
+     and exists (select 1 from public.role_permissions rp
+                  where rp.role_id = m.role_id
+                    and rp.permission_id = 'organisation.administrer');
+  if v_remaining = 0 then
+    raise exception 'Impossible de retirer le dernier administrateur de l''organisation.';
+  end if;
+  return new;
+end; $$;
+create trigger membership_last_admin_guard
+  before update or delete on public.memberships
+  for each row execute function private.prevent_last_org_admin_loss();
+
+/* ---- Garde : dernier administrateur via role_permissions ------------ */
+/* Retirer 'organisation.administrer' de la DERNIÈRE source de droit     */
+/* admin d'une org laisserait l'org sans administrateur — même invariant */
+/* côté grants. Un UPDATE est traité comme une perte sur l'ancienne     */
+/* ligne (déplacement de grant rare : réserver au super admin).         */
+create or replace function private.prevent_last_admin_perm_loss()
+returns trigger language plpgsql security definer
+set search_path = '' as $$
+declare v_org uuid; v_remaining int;
+begin
+  if tg_op = 'INSERT' then return new; end if;
+  if auth.uid() is null or private.is_super_admin() then
+    if tg_op = 'DELETE' then return old; else return new; end if;
+  end if;
+  if old.permission_id <> 'organisation.administrer' then
+    if tg_op = 'DELETE' then return old; else return new; end if;
+  end if;
+  select r.organization_id into v_org
+    from public.roles r where r.id = old.role_id;
+  if v_org is null then
+    if tg_op = 'DELETE' then return old; else return new; end if;
+  end if;
+  -- Même verrou que la garde memberships : un DELETE de membership et
+  -- un DELETE de grant sur la même org sont ainsi sérialisés ensemble.
+  perform private.lock_org_admin_guard(v_org);
+  select count(*) into v_remaining
+    from public.memberships m
+   where m.organization_id = v_org and m.is_active
+     and exists (select 1 from public.role_permissions rp
+                  where rp.role_id = m.role_id
+                    and rp.role_id <> old.role_id
+                    and rp.permission_id = 'organisation.administrer');
+  if v_remaining = 0 then
+    raise exception 'Impossible de retirer la dernière source de droits administrateur de l''organisation.';
+  end if;
+  if tg_op = 'DELETE' then return old; else return new; end if;
+end; $$;
+create trigger role_permissions_last_admin_guard
+  before update or delete on public.role_permissions
+  for each row execute function private.prevent_last_admin_perm_loss();
 
 /* ---------------- DROITS SUR LE SCHÉMA PRIVÉ ---------------------- */
 

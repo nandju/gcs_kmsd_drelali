@@ -89,7 +89,7 @@ export const LEAD_TRANSITIONS: Record<LeadStatus, LeadStatus[]> = {
 };
 
 interface ErpActions {
-  setOrg: (org: OrgCode) => void;
+  setOrg: (org: OrgCode, opts?: { silent?: boolean }) => void;
   /* CRM */
   addLead: (data: {
     contact: Omit<Contact, 'id' | 'isClient' | 'createdAt'>;
@@ -221,10 +221,12 @@ export function ErpProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const setOrg = useCallback((org: OrgCode) => {
+  const setOrg = useCallback((org: OrgCode, opts?: { silent?: boolean }) => {
     window.localStorage.setItem('erp-org', org);
     setState((s) => ({ ...s, org }));
-    toast.info(`Espace actif : ${ORGANIZATIONS[org].displayName}`);
+    if (!opts?.silent) {
+      toast.info(`Espace actif : ${ORGANIZATIONS[org].displayName}`);
+    }
   }, []);
 
   /* ------------------------------- CRM ------------------------------- */
