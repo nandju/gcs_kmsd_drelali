@@ -33,8 +33,31 @@ export default function ResetRequestForm() {
     });
 
     if (error) {
+      // Diagnostic temporaire : métadonnées uniquement (jamais d'email
+      // complet, jamais de token/secret).
+      const err = error as {
+        name?: string;
+        message?: string;
+        status?: number;
+        code?: string;
+      };
+      console.error(
+        '[reset-password] échec resetPasswordForEmail:',
+        JSON.stringify({
+          name: err.name ?? null,
+          message: err.message ?? null,
+          status: err.status ?? null,
+          code: err.code ?? null,
+          emailDomain: data.email.split('@')[1] ?? null,
+        }),
+      );
       setServerError(
-        'Envoi impossible pour le moment. Réessayez dans quelques instants.',
+        err.status === 429 || err.code === 'over_email_send_rate_limit'
+          ? 'Trop de demandes récentes. Le service email limite les envois : patientez environ une heure avant de réessayer.'
+          : err.message?.toLowerCase().includes('fetch') ||
+              err.name === 'AuthRetryableFetchError'
+            ? 'Connexion au serveur impossible. Vérifiez votre connexion internet et réessayez.'
+            : 'Envoi impossible pour le moment. Réessayez dans quelques instants.',
       );
       setIsLoading(false);
       return;

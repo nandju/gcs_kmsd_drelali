@@ -50,12 +50,67 @@ export default function UpdatePasswordForm({
   const [done, setDone] = useState(false);
 
   // L'utilisateur doit arriver avec une session valide (invite/recovery).
+  // Trois formats possibles selon la configuration Supabase :
+  //  1. Session déjà posée en cookies par /auth/callback (code / token_hash).
+  //  2. Tokens dans le fragment URL (#access_token=…) — flux implicite :
+  //     le client PKCE de @supabase/ssr NE les traite PAS automatiquement,
+  //     on appelle donc setSession() explicitement (tokens jamais loggés).
+  //  3. Session établie de façon asynchrone → couverte par onAuthStateChange.
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
-    supabase.auth.getSession().then(({ data }) => {
-      setHasSession(Boolean(data.session));
-      setSessionChecked(true);
+    let cancelled = false;
+
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (cancelled) return;
+      if (session) {
+        setHasSession(true);
+        setSessionChecked(true);
+      }
     });
+
+    (async () => {
+      // 2) Fragment implicite → établir la session explicitement.
+      const hash = window.location.hash.startsWith('#')
+        ? window.location.hash.substring(1)
+        : '';
+      if (hash) {
+        const params = new URLSearchParams(hash);
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+        if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+          // Nettoie le fragment (ne laisse pas les tokens dans l'URL).
+          window.history.replaceState(null, '', window.location.pathname);
+          if (!cancelled) {
+            setHasSession(!error);
+            setSessionChecked(true);
+          }
+          return;
+        }
+      }
+      // 1) Session déjà en cookies.
+      const { data } = await supabase.auth.getSession();
+      if (!cancelled) {
+        if (data.session) {
+          setHasSession(true);
+          setSessionChecked(true);
+        } else {
+          // 3) Laisse une courte fenêtre à onAuthStateChange avant de
+          // conclure que le lien est invalide.
+          setTimeout(() => {
+            if (!cancelled) setSessionChecked(true);
+          }, 1500);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   async function onSubmit(data: Inputs) {

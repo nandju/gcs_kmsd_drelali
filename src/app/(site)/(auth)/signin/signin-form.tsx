@@ -44,7 +44,11 @@ function SignInFormInner() {
 
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(
+    searchParams.get('error') === 'lien_invalide'
+      ? 'Ce lien est invalide ou a expiré. Demandez un nouveau lien de réinitialisation ou d’invitation.'
+      : null,
+  );
 
   const handleShowPassword = () => {
     setIsShowPassword(!isShowPassword);

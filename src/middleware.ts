@@ -22,7 +22,12 @@ const PUBLIC_PREFIXES = [
   '/reset-password',
   '/auth/callback',
 ];
-const PUBLIC_EXACT = new Set(['/', '/signin', '/signup']);
+const PUBLIC_EXACT = new Set([
+  '/',
+  '/signin',
+  '/signup',
+  '/set-password', // la page valide elle-même la session (lien invalide = message explicite)
+]);
 
 function isPublicPath(pathname: string): boolean {
   if (PUBLIC_EXACT.has(pathname)) return true;
